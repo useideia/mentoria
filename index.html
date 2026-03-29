@@ -595,10 +595,6 @@
     }
   }
 
-  // CONFIG — substitua pelos seus dados do Telegram
-  const TELEGRAM_TOKEN = '8623524032:AAHRqwpXboJe-nIOFtHWmdmpAi51Qvwl3Q8';
-  const TELEGRAM_CHAT_ID = '1031340535';
-
   async function submitForm(e) {
     e.preventDefault();
 
@@ -606,7 +602,6 @@
     btn.textContent = 'Enviando...';
     btn.disabled = true;
 
-    // Coleta os valores
     const nome      = document.querySelectorAll('input[type="text"]')[0].value;
     const whatsapp  = document.querySelectorAll('input[type="text"]')[1].value;
     const motivacao = document.querySelectorAll('textarea')[0].value;
@@ -618,39 +613,19 @@
     const finTexto  = finEl ? finEl.closest('.option-item').querySelector('.option-label').textContent : '—';
     const expectativa = document.querySelectorAll('textarea')[3].value;
 
-    const msg = `
-🔔 *Nova aplicação — Mentoria*
-
-*Nome:* ${nome}
-*WhatsApp:* ${whatsapp}
-
-*01 — Motivação:*
-${motivacao}
-
-*02 — Fase do negócio:*
-${faseTexto}
-
-*Contexto do negócio:*
-${contexto}
-
-*03 — Gargalo:*
-${gargalo}
-
-*04 — Capacidade financeira:*
-${finTexto}
-
-*05 — Expectativa:*
-${expectativa}
-    `.trim();
-
     try {
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      const res = await fetch('/api/submit-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+        body: JSON.stringify({
+          nome, whatsapp, motivacao,
+          fase: faseTexto, contexto, gargalo,
+          financeiro: finTexto, expectativa
+        })
       });
+      if (!res.ok) throw new Error('Erro ao enviar');
     } catch (err) {
-      console.error('Erro ao enviar para Telegram:', err);
+      console.error('Erro ao enviar aplicação:', err);
     }
 
     document.querySelector('.form-content').classList.add('hide');
