@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplicação — Mentoria</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f4f0;
+    --gray: #888;
+    --border: #2a2a2a;
+    --accent: #f5f4f0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 40px;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tag::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gray);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    margin-bottom: 40px;
+  }
+
+  h1 span {
+    display: block;
+    color: var(--gray);
+  }
+
+  .hero-text {
+    font-size: 17px;
+    color: #aaa;
+    max-width: 480px;
+    margin-bottom: 48px;
+    line-height: 1.8;
+  }
+
+  .hero-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .price-block {
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin-bottom: 48px;
+    max-width: 400px;
+  }
+
+  .price-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  .price-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+
+  .price-note {
+    font-size: 13px;
+    color: var(--gray);
+  }
+
+  .cta-scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .cta-scroll:hover { border-color: var(--white); }
+
+  .arrow-down {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* FORM SECTION */
+  .form-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gray);
+  }
+
+  /* QUESTION BLOCKS */
+  .question-block {
+    margin-bottom: 64px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .question-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .question-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+
+  .question-hint {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+
+  /* INPUTS */
+  textarea, input[type="text"], input[type="email"], select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 14px 0;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  textarea {
+    resize: none;
+    min-height: 100px;
+    line-height: 1.7;
+  }
+
+  textarea:focus, input:focus, select:focus {
+    border-color: var(--white);
+  }
+
+  textarea::placeholder, input::placeholder {
+    color: #444;
+  }
+
+  select option {
+    background: #111;
+    color: var(--white);
+  }
+
+  /* RADIO / OPCOES */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .option-item:last-child { border-bottom: none; }
+
+  .option-item input[type="radio"],
+  .option-item input[type="checkbox"] {
+    display: none;
+  }
+
+  .option-marker {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option-item input[type="radio"] + .option-marker {
+    border-radius: 50%;
+  }
+
+  .option-item:has(input:checked) .option-marker {
+    background: var(--white);
+    border-color: var(--white);
+  }
+
+  .option-item:has(input:checked) .option-marker::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: var(--black);
+    border-radius: 50%;
+  }
+
+  .option-item:has(input[type="checkbox"]:checked) .option-marker::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 5px;
+    border-left: 1.5px solid var(--black);
+    border-bottom: 1.5px solid var(--black);
+    transform: rotate(-45deg) translateY(-1px);
+    background: none;
+    border-radius: 0;
+  }
+
+  .option-label {
+    font-size: 15px;
+    font-weight: 300;
+    color: #aaa;
+    transition: color 0.2s;
+  }
+
+  .option-item:has(input:checked) .option-label {
+    color: var(--white);
+  }
+
+  /* AVISO FINANCEIRO */
+  .finance-note {
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-left: 2px solid var(--border);
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.7;
+    display: none;
+  }
+
+  .finance-note.show { display: block; }
+
+  /* SUBMIT */
+  .submit-block {
+    margin-top: 80px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  .submit-note {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.8;
+  }
+
+  .btn-submit {
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    padding: 18px 48px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    display: inline-block;
+  }
+
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .success-screen.show { display: block; }
+  .form-content.hide { display: none; }
+
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .success-text {
+    font-size: 16px;
+    color: #aaa;
+    line-height: 1.8;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+    border-top: 1px solid var(--border);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .hero, .form-section { padding: 60px 24px; }
+    h1 { font-size: 56px; }
+    .question-text { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="tag">Aplicação — Mentoria de negócios</p>
+  <h1>Você quer<br><span>escalar.</span><br>Eu quero<br>saber se<br>consigo te<br>ajudar.</h1>
+  <p class="hero-text">
+    Essa não é uma página de vendas.<br>
+    É um filtro.<br><br>
+    <strong>Só aceito clientes que têm real chance de resultado.</strong><br>
+    Preencha com honestidade — é o que mais importa aqui.
+  </p>
+
+  <button class="cta-scroll" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">
+    Quero aplicar
+    <svg class="arrow-down" viewBox="0 0 20 20" fill="none">
+      <path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</section>
+
+<hr class="divider">
+
+<!-- FORM -->
+<section class="form-section" id="form">
+  <p class="section-label">Formulário de aplicação</p>
+
+  <div class="form-content">
+    <form id="appForm" onsubmit="submitForm(event)">
+
+      <!-- Q0: Dados -->
+      <div class="question-block">
+        <p class="question-number">00 — Identificação</p>
+        <p class="question-text">Qual é o seu nome e como prefere ser chamado?</p>
+        <input type="text" placeholder="Nome completo" required>
+      </div>
+
+      <div class="question-block">
+        <p class="question-number">00b</p>
+        <p class="question-text">Qual o seu WhatsApp?</p>
+        <input type="text" placeholder="+55 (XX) XXXXX-XXXX" required>
+      </div>
+
+      <!-- Q1: Motivação — faz o cliente se vender -->
+      <div class="question-block">
+        <p class="question-number">01 — Motivação</p>
+        <p class="question-text">Por que você acredita que essa mentoria é a oportunidade certa para o seu negócio agora?</p>
+        <p class="question-hint">Seja específico. Essa resposta me diz mais sobre você do que qualquer currículo.</p>
+        <textarea placeholder="Escreva aqui..." required></textarea>
+      </div>
+
+      <!-- Q2: Fase do negócio -->
+      <div class="question-block">
+        <p class="question-number">02 — Fase do negócio</p>
+        <p class="question-text">Qual é o momento atual do seu negócio?</p>
+        <p class="question-hint">Escolha o que mais se aproxima — e complemente abaixo.</p>
+        <div class="options-grid">
+          <label class="option-item">
+            <input type="radio" name="fase" value="validando" required>
+            <span class="option-marker"></span>
+            <span class="option-label">Ainda validando — tenho clientes pontuais, mas nada previsível</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="fase" value="travado">
+            <span class="option-marker"></span>
+            <span class="option-label">Travado — faturamento parado há mais de 3 meses, não sei o que mudar</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="fase" value="crescendo">
+            <span class="option-marker"></span>
+            <span class="option-label">Crescendo, mas caótico — vendas acontecem, mas sem processo ou previsibilidade</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="fase" value="estruturando">
+            <span class="option-marker"></span>
+            <span class="option-label">Estruturando — quero montar time, processos e parar de depender só de mim</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="fase" value="escalando">
+            <span class="option-marker"></span>
+            <span class="option-label">Escalando — já tenho operação rodando, quero ir para o próximo nível</span>
+          </label>
+        </div>
+        <div style="margin-top: 28px;">
+          <p class="question-hint">Me conta um pouco mais sobre o seu negócio — segmento, tempo de mercado, como você vende hoje.</p>
+          <textarea placeholder="Ex: tenho uma agência de marketing há 2 anos, atendo PMEs, vendo por indicação e estou tentando criar uma operação que não dependa só de mim..." required></textarea>
+        </div>
+      </div>
+
+      <!-- Q3: Gargalo -->
+      <div class="question-block">
+        <p class="question-number">03 — Gargalo</p>
+        <p class="question-text">Qual é o maior problema que está impedindo o seu negócio de crescer hoje?</p>
+        <p class="question-hint">Sem rodeios. Quanto mais honesto, melhor consigo avaliar o fit.</p>
+        <textarea placeholder="Escreva aqui..." required></textarea>
+      </div>
+
+      <!-- Q4: Capacidade financeira — filtro direto -->
+      <div class="question-block">
+        <p class="question-number">04 — Compromisso financeiro</p>
+        <p class="question-text">O investimento nessa mentoria é de R$ 6.000,00 por 3 meses de acompanhamento.<br>Você tem condições de assumir esse compromisso agora?</p>
+        <p class="question-hint">Não há resposta certa ou errada — apenas honestidade.</p>
+        <div class="options-grid">
+          <label class="option-item">
+            <input type="radio" name="financeiro" value="sim" required onchange="toggleFinanceNote(this)">
+            <span class="option-marker"></span>
+            <span class="option-label">Sim, tenho condições</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="financeiro" value="talvez" onchange="toggleFinanceNote(this)">
+            <span class="option-marker"></span>
+            <span class="option-label">Preciso reorganizar, mas consigo</span>
+          </label>
+          <label class="option-item">
+            <input type="radio" name="financeiro" value="nao" onchange="toggleFinanceNote(this)">
+            <span class="option-marker"></span>
+            <span class="option-label">Não tenho condições no momento</span>
+          </label>
+        </div>
+        <div class="finance-note" id="financeNote">
+          Obrigado pela honestidade. Ainda assim, envie sua aplicação — avalio caso a caso e posso te orientar para o melhor momento de entrada.
+        </div>
+      </div>
+
+      <!-- Q5: Expectativa -->
+      <div class="question-block">
+        <p class="question-number">05 — Expectativa</p>
+        <p class="question-text">O que precisa acontecer nos próximos 6 meses para você sentir que essa mentoria valeu a pena?</p>
+        <p class="question-hint">Resultados concretos. Isso me ajuda a entender se consigo entregar o que você espera.</p>
+        <textarea placeholder="Escreva aqui..." required></textarea>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-block">
+        <p class="submit-note">
+          Vou analisar sua aplicação pessoalmente e responder em até 48 horas.<br>
+          Se houver fit, marco uma conversa rápida de 20 minutos.
+        </p>
+        <button type="submit" class="btn-submit">Enviar aplicação</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <p class="tag" style="justify-content:center;">Aplicação recebida</p>
+    <h2 class="success-title">Recebi.<br>Obrigado.</h2>
+    <p class="success-text">
+      Vou analisar sua aplicação e responder<br>
+      pessoalmente em até 48 horas.<br><br>
+      Se houver fit, você vai receber meu contato<br>
+      direto no WhatsApp.
+    </p>
+  </div>
+
+</section>
+
+<footer>
+  © Rapha Koga · Mentoria de negócios
+</footer>
+
+<script>
+  // Intersection observer para animação de entrada
+  const blocks = document.querySelectorAll('.question-block');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  blocks.forEach(b => observer.observe(b));
+
+  // Nota financeira
+  function toggleFinanceNote(el) {
+    const note = document.getElementById('financeNote');
+    if (el.value === 'nao' || el.value === 'talvez') {
+      note.classList.add('show');
+    } else {
+      note.classList.remove('show');
+    }
+  }
+
+  // CONFIG — substitua pelos seus dados do Telegram
+  const TELEGRAM_TOKEN = '8623524032:AAHRqwpXboJe-nIOFtHWmdmpAi51Qvwl3Q8';
+  const TELEGRAM_CHAT_ID = '1031340535';
+
+  async function submitForm(e) {
+    e.preventDefault();
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    // Coleta os valores
+    const nome      = document.querySelectorAll('input[type="text"]')[0].value;
+    const whatsapp  = document.querySelectorAll('input[type="text"]')[1].value;
+    const motivacao = document.querySelectorAll('textarea')[0].value;
+    const faseEl    = document.querySelector('input[name="fase"]:checked');
+    const faseTexto = faseEl ? faseEl.closest('.option-item').querySelector('.option-label').textContent : '—';
+    const contexto  = document.querySelectorAll('textarea')[1].value;
+    const gargalo   = document.querySelectorAll('textarea')[2].value;
+    const finEl     = document.querySelector('input[name="financeiro"]:checked');
+    const finTexto  = finEl ? finEl.closest('.option-item').querySelector('.option-label').textContent : '—';
+    const expectativa = document.querySelectorAll('textarea')[3].value;
+
+    const msg = `
+🔔 *Nova aplicação — Mentoria*
+
+*Nome:* ${nome}
+*WhatsApp:* ${whatsapp}
+
+*01 — Motivação:*
+${motivacao}
+
+*02 — Fase do negócio:*
+${faseTexto}
+
+*Contexto do negócio:*
+${contexto}
+
+*03 — Gargalo:*
+${gargalo}
+
+*04 — Capacidade financeira:*
+${finTexto}
+
+*05 — Expectativa:*
+${expectativa}
+    `.trim();
+
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+      });
+    } catch (err) {
+      console.error('Erro ao enviar para Telegram:', err);
+    }
+
+    document.querySelector('.form-content').classList.add('hide');
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo({ top: document.getElementById('form').offsetTop - 40, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
